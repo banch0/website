@@ -2,11 +2,11 @@ package main
 
 import (
 	"context"
-	"crud/cmd/crud/app"
-	"crud/pkg/crud/services/burgers"
 	"errors"
 	"flag"
 	"log"
+	"mux/cmd/website/app"
+	"mux/pkg/website/services/burgers"
 	"net"
 	"net/http"
 	"path/filepath"

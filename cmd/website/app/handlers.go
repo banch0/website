@@ -1,10 +1,10 @@
 package app
 
 import (
-	"crud/pkg/crud/models"
 	"html/template"
 	"io/ioutil"
 	"log"
+	"mux/pkg/website/models"
 	"net/http"
 	"path/filepath"
 )

@@ -5,28 +5,23 @@ import (
 	"errors"
 	"log"
 
-	"github.com/banch0/mux/pkg/crud/models"
-
-	"github.com/jackc/pgx/v4"
+	"mux/pkg/website/models"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
-
-// ERRNOROWS - global var for error no rows;
-var ERRNOROWS = pgx.ErrNoRows
 
 // ErrPoolCantBeNil ...
 var ErrPoolCantBeNil = errors.New("pool can't be nil")
 
 // ServiceBurgers ...
 type ServiceBurgers struct {
-	pool *pgxpool.Pool // dependency
+	pool *pgxpool.Pool
 }
 
 // NewBurgersSvc ...
 func NewBurgersSvc(pool *pgxpool.Pool) *ServiceBurgers {
 	if pool == nil {
-		panic(ErrPoolCantBeNil) // <- be accurate
+		panic(ErrPoolCantBeNil)
 	}
 	return &ServiceBurgers{pool: pool}
 }
@@ -57,9 +52,9 @@ func (service *ServiceBurgers) BurgersList(ctx context.Context) (list []models.B
 	rows, err := conn.Query(context.Background(),
 		"SELECT id, name, price FROM burgers WHERE removed = FALSE")
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return nil, errors.New("no rows")
-		}
+		// if err == pgx.ErrNoRows {
+		// 	return nil, errors.New("no rows")
+		// }
 		log.Println("errors", err)
 		return nil, err // TODO: wrap to specific error
 	}
@@ -94,7 +89,6 @@ func (service *ServiceBurgers) SaveBurger(ctx context.Context, model models.Burg
 		&model.ID, &model.Name, &model.Price, &model.Removed)
 	rows := res.RowsAffected()
 	if rows == 0 {
-		err = ERRNOROWS
 		return
 	}
 	log.Println(res)

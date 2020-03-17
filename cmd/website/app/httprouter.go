@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 	"net/http"
-	"github.com/go-chi/chi"
 )
 
 // Router ...
