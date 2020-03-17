@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -15,7 +16,7 @@ func (receiver *server) handleBurgersList() func(http.ResponseWriter, *http.Requ
 		panic(err)
 	}
 	return func(writer http.ResponseWriter, request *http.Request) {
-		list, err := receiver.burgersSvc.BurgersList()
+		list, err := receiver.burgersSvc.BurgersList(context.Background())
 		if err != nil {
 			log.Print(err)
 			http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -56,7 +57,7 @@ func (receiver *server) handleBurgersRemove() func(responseWriter http.ResponseW
 		// TODO: update removed = true in db
 		// TODO: посмотреть, можно ли переделать на GET
 		http.Redirect(writer, request, "/", http.StatusPermanentRedirect)
-		returnServiceBurgers
+		return //ServiceBurgers
 	}
 }
 
