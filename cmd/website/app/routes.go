@@ -5,46 +5,18 @@ import (
 	"regexp"
 )
 
-// за разделение handler'ов по адресам -> routing
-func (receiver *server) InitRoutes() {
-	mux := receiver.router.(*ExactMux)
-	// panic, если происходят конфликты
-	// Handle - добавляет Handler (неудобно)
-	// HandleFunc
-
-	// стандартный mux:
-	// - если адрес начинается со "/" - то под действие обработчика попадает всё, что начинается со "/"
-	mux.GET("/", receiver.handleBurgersList())
-
-	//mux.POST("/burgers/save", receiver.handleBurgersSave())
-	//mux.POST("/burgers/remove", receiver.handleBurgersRemove())
-
-	// - но если есть более "специфичный", то используется он
-	mux.GET("/favicon.ico", receiver.handleFavicon())
-}
-
-// not have duplicate controll, instead use last object
-
 func (receiver *server) InitRoutesPath() {
 	mux := receiver.router.(*Resolver)
-	mux.Add("GET /hello", hello)
 	mux.Add("(GET|HEAD) /goodbye(/?[A-Za-z0-9]*)?", goodbye)
-	mux.Add("(GET|HEAD) /goodbye(/?[A-Za-z0-9]*)?", good)
-	mux.Add("(GET|HEAD|POST) /test(/?[A-Za-z0-9]*)?", test)
+	mux.Add("GET /api/burgers", receiver.handleAllBurgers())
+	mux.Add("GET /api/burger(/?[0-9]*)?", receiver.getBurgerByID())
+	mux.Add("(POST|HEAD) /api/burgers", receiver.handleBurgerSave())
+	mux.Add("(PUT|HEAD) /api/burgers", receiver.handleBurgerUpdate())
+	mux.Add("(DELETE|HEAD) /api/burgers(/?[0-9]*)?", receiver.handleDeleteBurgers())
 }
 
-func test(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("test \n"))
-}
-
-func hello(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("hello"))
-}
 func goodbye(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte("goodbye"))
-}
-func good(res http.ResponseWriter, req *http.Request) {
-	res.Write([]byte("goodbye2"))
 }
 
 // Resolver ...

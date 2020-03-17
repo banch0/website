@@ -9,9 +9,6 @@ import (
 	"sync"
 )
 
-// map["GET"] - map["/"] - handler GET
-// map["POST"] - map["/"] - handler POST
-
 // ExactMux new router
 type ExactMux struct {
 	mutex           sync.RWMutex

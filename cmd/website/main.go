@@ -5,11 +5,12 @@ import (
 	"errors"
 	"flag"
 	"log"
-	"mux/cmd/website/app"
-	"mux/pkg/website/services/burgers"
 	"net"
 	"net/http"
 	"path/filepath"
+
+	"github.com/banch0/mux/cmd/website/app"
+	"github.com/banch0/mux/pkg/website/services/burgers"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )

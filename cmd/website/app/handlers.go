@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"log"
-	"mux/pkg/website/models"
+	"github.com/banch0/mux/pkg/website/models"
 	"net/http"
 	"path/filepath"
 )

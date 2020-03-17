@@ -1,0 +1,32 @@
+GET http://localhost:9999/api/burgers
+
+###
+GET http://localhost:9999/api/burger/1
+
+###
+POST http://localhost:9999/api/burgers
+Content-Type: application/json
+Accept: application/json
+
+{
+    "Id": 6,
+    "Name": "Cheese Burger2",
+    "Price": 21000,
+    "Remove": false
+}
+
+### 
+DELETE http://localhost:9999/api/burgers/7
+
+
+###
+PUT http://localhost:9999/api/burgers/3
+Content-Type: application/json
+Accept: application/json
+
+{
+    "Id": 4,
+    "Name": "Cheese Burger",
+    "Price": 21000
+}
+

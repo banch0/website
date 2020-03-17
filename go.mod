@@ -1,4 +1,4 @@
-module mux
+module github.com/banch0/mux
 
 go 1.13
 

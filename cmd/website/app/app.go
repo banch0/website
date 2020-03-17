@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"mux/pkg/website/services/burgers"
+	"github.com/banch0/mux/pkg/website/services/burgers"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )

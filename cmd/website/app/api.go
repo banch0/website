@@ -5,16 +5,17 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
-	"mux/pkg/website/models"
 	"net/http"
 	"path"
 	"strconv"
+
+	"github.com/banch0/mux/pkg/website/models"
 
 	"github.com/banch0/mux/cmd/website/app/dto"
 )
 
 // Delete One Burger
-func (s *Server) handleDeleteBurgers() http.HandlerFunc {
+func (s *server) handleDeleteBurgers() http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		id, err := strconv.Atoi(path.Base(req.URL.Path))
 		if err != nil {
@@ -37,7 +38,7 @@ func (s *Server) handleDeleteBurgers() http.HandlerFunc {
 }
 
 // Get One Burger By ID
-func (s *Server) getBurgerByID() http.HandlerFunc {
+func (s *server) getBurgerByID() http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		log.Println("get by id")
 		id, err := strconv.Atoi(path.Base(req.URL.Path))
@@ -75,7 +76,7 @@ func (s *Server) getBurgerByID() http.HandlerFunc {
 }
 
 // Get All Burgers
-func (s *Server) handleAllBurgers() http.HandlerFunc {
+func (s *server) handleAllBurgers() http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		log.Println("get all handlers")
 		burgers, err := s.burgersSvc.BurgersList(req.Context())
@@ -115,7 +116,7 @@ func (s *Server) handleAllBurgers() http.HandlerFunc {
 }
 
 // Create Burger
-func (s *Server) handleBurgerSave() http.HandlerFunc {
+func (s *server) handleBurgerSave() http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		if req.Header.Get("Content-Type") != "application/json" {
 			http.Error(
@@ -162,7 +163,7 @@ func (s *Server) handleBurgerSave() http.HandlerFunc {
 }
 
 // Update Burger
-func (s *Server) handleBurgerUpdate() http.HandlerFunc {
+func (s *server) handleBurgerUpdate() http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		id, err := strconv.Atoi(path.Base(req.URL.Path))
 		if err != nil {

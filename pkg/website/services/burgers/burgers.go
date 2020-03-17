@@ -5,7 +5,7 @@ import (
 	"errors"
 	"log"
 
-	"mux/pkg/website/models"
+	"github.com/banch0/mux/pkg/website/models"
 
 	"github.com/jackc/pgx/v4/pgxpool"
 )
