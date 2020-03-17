@@ -9,99 +9,11 @@ import (
 	"path/filepath"
 )
 
-//func (receiver *server) handleBurgersList() func(writer http.ResponseWriter, request *http.Request) {
-//	// TODO: handle concurrency
-//	burgers := make([]Burger, 0)
-//	var nextId int64 = 0
-//	// handler + closure
-//	// TODO: make some initialization -> only once
-//	// glob -> * - всё, кроме /
-//	// glob -> ? - один символ, но не /
-//	tpl, err := template.ParseFiles(filepath.Join(receiver.templatesPath, "index.gohtml"))
-//	if err != nil {
-//		panic(err)
-//	}
-//	return func(writer http.ResponseWriter, request *http.Request) {
-//		if request.Method == http.MethodPost {
-//			err := request.ParseForm()
-//			if err != nil {
-//				http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest) // 400 - Bad Request
-//				return
-//			}
-//
-//			action := request.PostForm.Get("action")
-//			if action == "" {
-//				http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest) // 400 - Bad Request
-//				return
-//			}
-//
-//			//switch action {
-//			//case "save":
-//			//	...
-//			//case "remove":
-//			//}
-//
-//			log.Print(request)
-//			log.Print(request.URL.Query())
-//			log.Print(request.Form)
-//			log.Print(request.PostForm)
-//			log.Print(request.MultipartForm)
-//
-//			name, ok := request.PostForm["name"]
-//			if !ok {
-//				http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest) // 400 - Bad Request
-//				return
-//			}
-//
-//			price, ok := request.PostForm["price"]
-//			if !ok {
-//				http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest) // 400 - Bad Request
-//				return
-//			}
-//
-//			description, ok := request.PostForm["description"]
-//			if !ok {
-//				http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest) // 400 - Bad Request
-//				return
-//			}
-//
-//			// TODO: всё, что приходит по HTTP - string
-//			parsedPrice, err := strconv.Atoi(price[0])
-//			if err != nil {
-//				http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest) // 400 - Bad Request
-//				return
-//			}
-//
-//			// TODO: общее соглашение
-//			// - id = 0, создание нового элемента
-//			// - id != 0, обновление существующего элемента
-//			nextId++
-//			burger := Burger{nextId, name[0], parsedPrice, description[0]}
-//			burgers = append(burgers, burger)
-//		}
-//
-//		// TODO: fetch from DB
-//		data := &struct {
-//			Title string
-//			Burgers []Burger
-//		}{
-//			Title: "McDonalds",
-//			Burgers: burgers,
-//		}
-//
-//		err = tpl.Execute(writer, data)
-//		if err != nil {
-//			log.Print(err)
-//		}
-//	}
-//}
-
 func (receiver *server) handleBurgersList() func(http.ResponseWriter, *http.Request) {
 	tpl, err := template.ParseFiles(filepath.Join(receiver.templatesPath, "index.gohtml"))
 	if err != nil {
 		panic(err)
 	}
-	// -> go concurrency (paraller/thread-safe)
 	return func(writer http.ResponseWriter, request *http.Request) {
 		list, err := receiver.burgersSvc.BurgersList()
 		if err != nil {
@@ -111,10 +23,10 @@ func (receiver *server) handleBurgersList() func(http.ResponseWriter, *http.Requ
 		}
 
 		data := struct {
-			Title string
+			Title   string
 			Burgers []models.Burger
 		}{
-			Title: "McDonalds",
+			Title:   "McDonalds",
 			Burgers: list,
 		}
 
@@ -144,7 +56,7 @@ func (receiver *server) handleBurgersRemove() func(responseWriter http.ResponseW
 		// TODO: update removed = true in db
 		// TODO: посмотреть, можно ли переделать на GET
 		http.Redirect(writer, request, "/", http.StatusPermanentRedirect)
-		return
+		returnServiceBurgers
 	}
 }
 

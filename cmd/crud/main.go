@@ -1,14 +1,10 @@
 package main
 
-// package
-// import
-// var + type
-// method + function
-
 import (
 	"context"
 	"crud/cmd/crud/app"
 	"crud/pkg/crud/services/burgers"
+	"errors"
 	"flag"
 	"log"
 	"net"
@@ -16,7 +12,6 @@ import (
 	"path/filepath"
 
 	"github.com/jackc/pgx/v4/pgxpool"
-	// "github.com/julienschmidt/httprouter"
 )
 
 var (
@@ -31,19 +26,22 @@ func main() {
 	start(addr, *dsn)
 }
 
+// ErrConnectDBPool ...
+var ErrConnectDBPool = errors.New("Can't create connect to db pool")
+
 func start(addr string, dsn string) {
 	// router := app.NewExactMux()
 	router := app.NewPathResolver()
-	// Context: <-
 	pool, err := pgxpool.Connect(context.Background(), dsn)
 	if err != nil {
-		panic(err)
+		panic(ErrConnectDBPool)
 	}
+
 	burgersSvc := burgers.NewBurgersSvc(pool)
 	server := app.NewServer(
 		router,
 		pool,
-		burgersSvc, // DI + Containers
+		burgersSvc,
 		filepath.Join("web", "templates"),
 		filepath.Join("web", "assets"),
 	)
@@ -51,6 +49,5 @@ func start(addr string, dsn string) {
 	server.InitRoutesPath()
 
 	log.Println("Server starting ...")
-	// server'ы должны работать "вечно"
-	panic(http.ListenAndServe(addr, server)) // поднимает сервер на определённом адресе и обрабатывает запросы
+	panic(http.ListenAndServe(addr, server))
 }

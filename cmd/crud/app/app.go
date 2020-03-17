@@ -1,50 +1,62 @@
 package app
 
 import (
-	"crud/pkg/crud/services/burgers"
 	"errors"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"net/http"
+
+	"github.com/mux/pkg/crud/services/burgers"
+
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 // описание сервиса, который хранит зависимости и выполняет работу
-type server struct { // <- Alt + Enter -> Constructor
-	// зависимости (dependencies)
+type server struct {
 	pool          *pgxpool.Pool
 	router        http.Handler
-	burgersSvc    *burgers.BurgersSvc
+	burgersSvc    *burgers.ServiceBurgers
 	templatesPath string
 	assetsPath    string
 }
 
-// Все зависимости делятся на:
-// 1. required <-
-// 2. optional
+// ErrRouteCantBeNil ...
+var ErrRouteCantBeNil = errors.New("router can't be nil")
 
-// crash early
-func NewServer(router http.Handler, pool *pgxpool.Pool, burgersSvc *burgers.BurgersSvc, templatesPath string, assetsPath string) *server {
+// ErrPoolCantBeNil ...
+var ErrPoolCantBeNil = errors.New("pool can't be nil")
+
+// ErrBurgerSvcCantBeNil ...
+var ErrBurgerSvcCantBeNil = errors.New("burgersSvc can't be nil")
+
+// ErrTamplateCantBeNil ...
+var ErrTamplateCantBeNil = errors.New("templatesPath can't be empty")
+
+// ErrAssetsPathCantBeNil ...
+var ErrAssetsPathCantBeNil = errors.New("assetsPath can't be empty")
+
+// NewServer ...
+func NewServer(router http.Handler, pool *pgxpool.Pool, burgersSvc *burgers.ServiceBurgers, templatesPath string, assetsPath string) *server {
 	if router == nil {
-		panic(errors.New("router can't be nil"))
+		panic(ErrRouteCantBeNil)
 	}
 	if pool == nil {
-		panic(errors.New("pool can't be nil"))
+		panic(ErrPoolCantBeNil)
 	}
 	if burgersSvc == nil {
-		panic(errors.New("burgersSvc can't be nil"))
+		panic(ErrBurgerSvcCantBeNil)
 	}
 	if templatesPath == "" {
-		panic(errors.New("templatesPath can't be empty"))
+		panic(ErrTamplateCantBeNil)
 	}
 	if assetsPath == "" {
-		panic(errors.New("assetsPath can't be empty"))
+		panic(ErrAssetsPathCantBeNil)
 	}
 
 	return &server{
-		router: router,
-		pool: pool,
-		burgersSvc: burgersSvc,
+		router:        router,
+		pool:          pool,
+		burgersSvc:    burgersSvc,
 		templatesPath: templatesPath,
-		assetsPath: assetsPath,
+		assetsPath:    assetsPath,
 	}
 }
 
